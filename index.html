@@ -508,5 +508,27 @@
     submitBtn.className = "btn btn-primary";
   }
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // 你的 Firebase 專案配置 (來自 image_185b8d.png)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCv66pE4zBxas4QySrMeVyXXXhqbYg1llI",
+    authDomain: "diaphragm-wall-61033.firebaseapp.com",
+    projectId: "diaphragm-wall-61033",
+    storageBucket: "diaphragm-wall-61033.appspot.com",
+    messagingSenderId: "245135889935",
+    appId: "1:245135889935:web:b590ed96b8ba879115b57a",
+    measurementId: "G-4LTNHYWTG"
+  };
+
+  // 初始化 Firebase 與 Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 這裡之後會放對接畫面的「新增資料」與「讀取資料」JavaScript 邏輯
+  console.log("Firebase 連線成功！");
+</script>
 </body>
 </html>
