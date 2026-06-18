@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>工程查驗與資料交付管理系統</title>
     <style>
         /* 日系簡約風格色彩計畫 */
@@ -13,7 +13,7 @@
             --primary-teal-light: #E9F2F3;/* 淺藍綠 (標籤、高亮) */
             --accent-orange: #D96C4A;    /* 橙色 (點綴、提醒) */
             --accent-orange-light: #FDF0EC;/* 淺橙色 */
-            --text-main: #2C3E35;        /* 主要文字 (帶深綠相的中性深色) */
+            --text-main: #2C3E35;        /* 主要文字 */
             --text-muted: #7A8782;       /* 次要、備註文字 */
             --border-color: #E2DDD5;     /* 細線邊框色 */
             --border-focus: #1E4D56;
@@ -26,17 +26,22 @@
             font-family: "Helvetica Neue", Arial, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
         }
 
-        body {
+        html, body {
             background-color: var(--bg-neutral);
             color: var(--text-main);
             line-height: 1.6;
-            padding: 20px;
             font-size: 14px;
+            overflow-x: hidden; /* 徹底防止手機版左右晃動、漏光 */
+        }
+
+        body {
+            padding: 20px;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
 
         /* 標題區頂部欄 */
@@ -72,7 +77,7 @@
             color: var(--text-muted);
         }
 
-        /* 連動表單區塊 - 隱藏/顯示切換 */
+        /* 表單區塊 */
         .form-section {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -153,7 +158,6 @@
             gap: 6px;
             font-size: 12px;
             cursor: pointer;
-            user-select: none;
         }
 
         .checkbox-label input {
@@ -162,7 +166,7 @@
             height: 15px;
         }
 
-        /* 按鈕設計 */
+        /* 按鈕 */
         .btn-container {
             display: flex;
             gap: 10px;
@@ -180,33 +184,12 @@
             transition: background-color 0.2s;
         }
 
-        .btn-primary {
-            background-color: var(--primary-teal);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #15363D;
-        }
-
-        .btn-accent {
-            background-color: var(--accent-orange);
-            color: white;
-        }
-
-        .btn-accent:hover {
-            background-color: #C05636;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-        }
-
-        .btn-secondary:hover {
-            background-color: #EEE;
-        }
+        .btn-primary { background-color: var(--primary-teal); color: white; }
+        .btn-primary:hover { background-color: #15363D; }
+        .btn-accent { background-color: var(--accent-orange); color: white; }
+        .btn-accent:hover { background-color: #C05636; }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-secondary:hover { background-color: #EEE; }
 
         /* 資料表格區 */
         .table-wrapper {
@@ -215,13 +198,14 @@
             border-radius: 4px;
             overflow-x: auto;
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            width: 100%;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            min-width: 1100px;
+            min-width: 1100px; /* 桌機版保持寬度不壓縮 */
         }
 
         th {
@@ -241,11 +225,8 @@
             vertical-align: middle;
         }
 
-        tr:hover {
-            background-color: #FAF9F6;
-        }
+        tr:hover { background-color: #FAF9F6; }
 
-        /* 狀態標籤 */
         .badge {
             display: inline-block;
             padding: 2px 8px;
@@ -253,39 +234,17 @@
             font-size: 11px;
             font-weight: 500;
         }
+        .badge-success { background-color: var(--primary-teal-light); color: var(--primary-teal); }
+        .badge-warning { background-color: var(--accent-orange-light); color: var(--accent-orange); }
 
-        .badge-success {
-            background-color: var(--primary-teal-light);
-            color: var(--primary-teal);
-        }
+        .dot-active { color: var(--primary-teal); font-weight: bold; font-size: 14px; }
+        .dot-inactive { color: #DDD; }
+        .action-btns { display: flex; gap: 5px; }
+        .btn-sm { padding: 3px 8px; font-size: 11px; border-radius: 2px; }
 
-        .badge-warning {
-            background-color: var(--accent-orange-light);
-            color: var(--accent-orange);
-        }
-
-        /* 勾選顯示圓點/剔號樣式 */
-        .dot-active {
-            color: var(--primary-teal);
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .dot-inactive {
-            color: #DDD;
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 5px;
-        }
-
-        .btn-sm {
-            padding: 3px 8px;
-            font-size: 11px;
-            border-radius: 2px;
-        }
-
-        /* 手機版本主導 RWD 排版 */
+        /* ========================================================
+           手機版 RWD 核心修正區：徹底解決右拉與留白問題
+           ======================================================== */
         @media (max-width: 900px) {
             body {
                 padding: 10px;
@@ -310,19 +269,27 @@
                 gap: 8px;
             }
 
-            /* 表格轉卡片流 */
+            /* 強制表格解除桌機限制，寬度完全跟隨手機螢幕 */
             .table-wrapper {
                 border: none;
                 background-color: transparent;
                 box-shadow: none;
+                overflow-x: hidden; /* 關閉水平滾動條 */
             }
 
-            table, thead, tbody, th, td, tr {
+            table {
+                min-width: auto !important; /* 破除 1100px 限制 */
+                width: 100% !important;
                 display: block;
             }
 
             thead {
-                display: none; /* 隱藏傳統表頭 */
+                display: none; /* 隱藏網頁式表頭 */
+            }
+
+            tbody, tr, td {
+                display: block;
+                width: 100% !important;
             }
 
             tr {
@@ -330,30 +297,28 @@
                 border: 1px solid var(--border-color);
                 border-radius: 6px;
                 margin-bottom: 15px;
-                padding: 15px;
+                padding: 12px 15px;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             }
 
-            tr:hover {
-                background-color: var(--bg-card);
-            }
-
+            /* 讓每一個欄位在手機上左右貼齊 */
             td {
-                display: flex;
-                justify-content: space-between;
+                display: flex !important;
+                justify-content: space-between !important; /* 左側標籤，右側數據 */
                 align-items: center;
-                padding: 6px 0;
-                border-bottom: 1px dashed #F0EDE6;
+                padding: 8px 0 !important;
+                border-bottom: 1px dashed #F0EDE6 !important;
                 text-align: right;
+                background: none;
             }
 
             td:last-child {
-                border-bottom: none;
-                padding-top: 12px;
-                justify-content: flex-end;
+                border-bottom: none !important;
+                padding-top: 12px !important;
+                justify-content: flex-end !important; /* 按鈕靠右 */
             }
 
-            /* 手機版標籤注入 */
+            /* 手機版動態注入標籤 */
             td::before {
                 content: attr(data-label);
                 font-weight: 500;
@@ -376,6 +341,7 @@
         <div class="stats" id="statsCount">載入中...</div>
     </header>
 
+    <!-- 輸入/編輯表單 -->
     <div class="form-section">
         <h2 id="formTitle">新增查驗資料單元</h2>
         <form id="dataForm">
@@ -429,6 +395,7 @@
         </form>
     </div>
 
+    <!-- 數據表格 -->
     <div class="table-wrapper">
         <table id="dataTable">
             <thead>
@@ -448,13 +415,13 @@
                 </tr>
             </thead>
             <tbody id="tableBody">
-                </tbody>
+                <!-- JavaScript 動態生成 -->
+            </tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // 初始化自截圖中讀取的原始高仿真模擬數據
     let projectData = [
         { name: "第24單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "", checkDate: "2026-05-11", deliveryDate: "2026-05-15" },
         { name: "第17單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "", checkDate: "2026-05-13", deliveryDate: "2026-05-15" },
@@ -467,20 +434,14 @@
         { name: "安全檢測-沉陷釘/傾斜計_0519", chk1: false, chk2: false, chk3: false, chk4: false, chk5: false, chk6: true, status: "完成列印", remarks: "", checkDate: "2026-05-19", deliveryDate: "2026-05-21" }
     ];
 
-    // 嘗試從瀏覽器 LocalStorage 載入歷史儲存數據
     if (localStorage.getItem('project_inspection_data')) {
-        try {
-            projectData = JSON.parse(localStorage.getItem('project_inspection_data'));
-        } catch(e) {
-            console.error("無法載入本地儲存數據，採用預設值。");
-        }
+        try { projectData = JSON.parse(localStorage.getItem('project_inspection_data')); } catch(e) {}
     }
 
     const tableBody = document.getElementById('tableBody');
     const dataForm = document.getElementById('dataForm');
     const statsCount = document.getElementById('statsCount');
 
-    // 渲染資料清單到網頁中
     function renderTable() {
         tableBody.innerHTML = '';
         let completedCount = 0;
@@ -489,41 +450,34 @@
             if (item.status === '完成列印') completedCount++;
 
             const tr = document.createElement('tr');
-            
-            // 建立標準儲存格並附帶 data-label 屬性供手機版 RWD 使用
             tr.innerHTML = `
                 <td data-label="查驗表/單元" style="font-weight: 500; color: var(--primary-teal);">${item.name}</td>
-                <td data-label="特密管" style="text-align: center;">${item.chk1 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="穩定液" style="text-align: center;">${item.chk2 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="超音波" style="text-align: center;">${item.chk3 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="鋼筋籠" style="text-align: center;">${item.chk4 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="混凝土" style="text-align: center;">${item.chk5 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="單項完成" style="text-align: center;">${item.chk6 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+                <td data-label="特密管">${item.chk1 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+                <td data-label="穩定液">${item.chk2 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+                <td data-label="超音波">${item.chk3 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+                <td data-label="鋼筋籠">${item.chk4 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+                <td data-label="混凝土">${item.chk5 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+                <td data-label="單項完成">${item.chk6 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
                 <td data-label="完成進度"><span class="badge ${item.status === '完成列印' ? 'badge-success' : 'badge-warning'}">${item.status}</span></td>
                 <td data-label="備註" style="color: var(--text-muted); font-size: 12px;">${item.remarks || '—'}</td>
                 <td data-label="查驗日期">${item.checkDate || '—'}</td>
                 <td data-label="資料交付">${item.deliveryDate || '—'}</td>
-                <td data-label="操作" style="text-align: center;">
+                <td data-label="操作">
                     <div class="action-btns">
-                        <button class="btn btn-secondary btn-sm" onclick="editRow(${index})">編輯</button>
-                        <button class="btn btn-accent btn-sm" style="background-color: #E2DDD5; color: #555;" onclick="deleteRow(${index})">刪除</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="editRow(${index})">編輯</button>
+                        <button type="button" class="btn btn-accent btn-sm" style="background-color: #E2DDD5; color: #555;" onclick="deleteRow(${index})">刪除</button>
                     </div>
                 </td>
             `;
             tableBody.appendChild(tr);
         });
 
-        // 更新統計指標
-        statsCount.innerHTML = `總計項目：<b>${projectData.length}</b> 筆 | 已完成：<span style="color: var(--primary-teal)"><b>${completedCount}</b></span> 筆 | 未完成：<span style="color: var(--accent-orange)"><b>${projectData.length - completedCount}</b></span> 筆`;
-        
-        // 儲存至本地瀏覽器暫存
+        statsCount.innerHTML = `總計：<b>${projectData.length}</b> 筆 | 已完成：<span style="color: var(--primary-teal)"><b>${completedCount}</b></span> 筆 | 未完成：<span style="color: var(--accent-orange)"><b>${projectData.length - completedCount}</b></span> 筆`;
         localStorage.setItem('project_inspection_data', JSON.stringify(projectData));
     }
 
-    // 提交表單（新增或修改儲存）
     dataForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
         const index = parseInt(document.getElementById('editIndex').value);
         const itemData = {
             name: document.getElementById('unitName').value,
@@ -539,19 +493,11 @@
             deliveryDate: document.getElementById('deliveryDate').value
         };
 
-        if (index === -1) {
-            // 新增項目
-            projectData.push(itemData);
-        } else {
-            // 修改指定項項目
-            projectData[index] = itemData;
-        }
-
+        if (index === -1) { projectData.push(itemData); } else { projectData[index] = itemData; }
         resetForm();
         renderTable();
     });
 
-    // 點擊編輯按鈕，載入歷史資料到表單
     function editRow(index) {
         const item = projectData[index];
         document.getElementById('editIndex').value = index;
@@ -567,26 +513,20 @@
         document.getElementById('checkDate').value = item.checkDate;
         document.getElementById('deliveryDate').value = item.deliveryDate;
 
-        document.getElementById('formTitle').innerText = `編輯資料單元：${item.name}`;
+        document.getElementById('formTitle').innerText = `編輯單元：${item.name}`;
         document.getElementById('submitBtn').innerText = "儲存修改";
         document.getElementById('submitBtn').className = "btn btn-accent";
-        
-        // 捲動至最上方讓使用者方便編輯
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 刪除項目
     function deleteRow(index) {
-        if (confirm(`確定要刪除「${projectData[index].name}」的紀錄嗎？`)) {
+        if (confirm(`確定要刪除「${projectData[index].name}」嗎？`)) {
             projectData.splice(index, 1);
             renderTable();
-            if(document.getElementById('editIndex').value == index) {
-                resetForm();
-            }
+            if(document.getElementById('editIndex').value == index) resetForm();
         }
     }
 
-    // 重置或取消編輯狀態
     function resetForm() {
         document.getElementById('dataForm').reset();
         document.getElementById('editIndex').value = "-1";
@@ -595,8 +535,8 @@
         document.getElementById('submitBtn').className = "btn btn-primary";
     }
 
-    // 初始化首次渲染表格
     renderTable();
 </script>
 
-
+</body>
+</html>
