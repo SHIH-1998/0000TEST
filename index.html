@@ -242,91 +242,21 @@
         .action-btns { display: flex; gap: 5px; }
         .btn-sm { padding: 3px 8px; font-size: 11px; border-radius: 2px; }
 
-        /* ========================================================
-           手機版 RWD 核心修正區：徹底解決右拉與留白問題
-           ======================================================== */
+        /* 手機版 RWD */
         @media (max-width: 900px) {
-            body {
-                padding: 10px;
-            }
-            
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width, .checkbox-group-wrapper {
-                grid-column: span 1;
-            }
-
-            .checkbox-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-
-            /* 強制表格解除桌機限制，寬度完全跟隨手機螢幕 */
-            .table-wrapper {
-                border: none;
-                background-color: transparent;
-                box-shadow: none;
-                overflow-x: hidden; /* 關閉水平滾動條 */
-            }
-
-            table {
-                min-width: auto !important; /* 破除 1100px 限制 */
-                width: 100% !important;
-                display: block;
-            }
-
-            thead {
-                display: none; /* 隱藏網頁式表頭 */
-            }
-
-            tbody, tr, td {
-                display: block;
-                width: 100% !important;
-            }
-
-            tr {
-                background-color: var(--bg-card);
-                border: 1px solid var(--border-color);
-                border-radius: 6px;
-                margin-bottom: 15px;
-                padding: 12px 15px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            }
-
-            /* 讓每一個欄位在手機上左右貼齊 */
-            td {
-                display: flex !important;
-                justify-content: space-between !important; /* 左側標籤，右側數據 */
-                align-items: center;
-                padding: 8px 0 !important;
-                border-bottom: 1px dashed #F0EDE6 !important;
-                text-align: right;
-                background: none;
-            }
-
-            td:last-child {
-                border-bottom: none !important;
-                padding-top: 12px !important;
-                justify-content: flex-end !important; /* 按鈕靠右 */
-            }
-
-            /* 手機版動態注入標籤 */
-            td::before {
-                content: attr(data-label);
-                font-weight: 500;
-                color: var(--primary-teal);
-                font-size: 12px;
-                text-align: left;
-                float: left;
-            }
+            body { padding: 10px; }
+            header { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width, .checkbox-group-wrapper { grid-column: span 1; }
+            .checkbox-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .table-wrapper { border: none; background-color: transparent; box-shadow: none; overflow-x: hidden; }
+            table { min-width: auto !important; width: 100% !important; display: block; }
+            thead { display: none; }
+            tbody, tr, td { display: block; width: 100% !important; }
+            tr { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 15px; padding: 12px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+            td { display: flex !important; justify-content: space-between !important; align-items: center; padding: 8px 0 !important; border-bottom: 1px dashed #F0EDE6 !important; text-align: right; background: none; }
+            td:last-child { border-bottom: none !important; padding-top: 12px !important; justify-content: flex-end !important; }
+            td::before { content: attr(data-label); font-weight: 500; color: var(--primary-teal); font-size: 12px; text-align: left; float: left; }
         }
     </style>
 </head>
@@ -341,7 +271,6 @@
         <div class="stats" id="statsCount">載入中...</div>
     </header>
 
-    <!-- 輸入/編輯表單 -->
     <div class="form-section">
         <h2 id="formTitle">新增查驗資料單元</h2>
         <form id="dataForm">
@@ -395,7 +324,6 @@
         </form>
     </div>
 
-    <!-- 數據表格 -->
     <div class="table-wrapper">
         <table id="dataTable">
             <thead>
@@ -415,133 +343,16 @@
                 </tr>
             </thead>
             <tbody id="tableBody">
-                <!-- JavaScript 動態生成 -->
-            </tbody>
+                </tbody>
         </table>
     </div>
 </div>
 
-<script>
-    let projectData = [
-        { name: "第24單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "", checkDate: "2026-05-11", deliveryDate: "2026-05-15" },
-        { name: "第17單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "", checkDate: "2026-05-13", deliveryDate: "2026-05-15" },
-        { name: "第19單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "", checkDate: "2026-05-15", deliveryDate: "2026-05-15" },
-        { name: "第26單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "", checkDate: "2026-05-14", deliveryDate: "2026-05-15" },
-        { name: "第25單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "監造自行製作", checkDate: "2026-05-21", deliveryDate: "2026-05-21" },
-        { name: "第35單元", chk1: true, chk2: true, chk3: true, chk4: true, chk5: true, chk6: false, status: "完成列印", remarks: "施工組做鋼筋籠", checkDate: "2026-05-23", deliveryDate: "2026-05-23" },
-        { name: "第29單元", chk1: false, chk2: false, chk3: false, chk4: false, chk5: false, chk6: false, status: "未完成", remarks: "0603查驗未過", checkDate: "2026-06-03", deliveryDate: "" },
-        { name: "安全檢測-沉陷釘/傾斜計_0514", chk1: false, chk2: false, chk3: false, chk4: false, chk5: false, chk6: true, status: "完成列印", remarks: "", checkDate: "2026-05-14", deliveryDate: "2026-05-15" },
-        { name: "安全檢測-沉陷釘/傾斜計_0519", chk1: false, chk2: false, chk3: false, chk4: false, chk5: false, chk6: true, status: "完成列印", remarks: "", checkDate: "2026-05-19", deliveryDate: "2026-05-21" }
-    ];
-
-    if (localStorage.getItem('project_inspection_data')) {
-        try { projectData = JSON.parse(localStorage.getItem('project_inspection_data')); } catch(e) {}
-    }
-
-    const tableBody = document.getElementById('tableBody');
-    const dataForm = document.getElementById('dataForm');
-    const statsCount = document.getElementById('statsCount');
-
-    function renderTable() {
-        tableBody.innerHTML = '';
-        let completedCount = 0;
-
-        projectData.forEach((item, index) => {
-            if (item.status === '完成列印') completedCount++;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td data-label="查驗表/單元" style="font-weight: 500; color: var(--primary-teal);">${item.name}</td>
-                <td data-label="特密管">${item.chk1 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="穩定液">${item.chk2 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="超音波">${item.chk3 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="鋼筋籠">${item.chk4 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="混凝土">${item.chk5 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="單項完成">${item.chk6 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
-                <td data-label="完成進度"><span class="badge ${item.status === '完成列印' ? 'badge-success' : 'badge-warning'}">${item.status}</span></td>
-                <td data-label="備註" style="color: var(--text-muted); font-size: 12px;">${item.remarks || '—'}</td>
-                <td data-label="查驗日期">${item.checkDate || '—'}</td>
-                <td data-label="資料交付">${item.deliveryDate || '—'}</td>
-                <td data-label="操作">
-                    <div class="action-btns">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="editRow(${index})">編輯</button>
-                        <button type="button" class="btn btn-accent btn-sm" style="background-color: #E2DDD5; color: #555;" onclick="deleteRow(${index})">刪除</button>
-                    </div>
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
-
-        statsCount.innerHTML = `總計：<b>${projectData.length}</b> 筆 | 已完成：<span style="color: var(--primary-teal)"><b>${completedCount}</b></span> 筆 | 未完成：<span style="color: var(--accent-orange)"><b>${projectData.length - completedCount}</b></span> 筆`;
-        localStorage.setItem('project_inspection_data', JSON.stringify(projectData));
-    }
-
-    dataForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const index = parseInt(document.getElementById('editIndex').value);
-        const itemData = {
-            name: document.getElementById('unitName').value,
-            chk1: document.getElementById('chk1').checked,
-            chk2: document.getElementById('chk2').checked,
-            chk3: document.getElementById('chk3').checked,
-            chk4: document.getElementById('chk4').checked,
-            chk5: document.getElementById('chk5').checked,
-            chk6: document.getElementById('chk6').checked,
-            status: document.getElementById('progressStatus').value,
-            remarks: document.getElementById('remarks').value,
-            checkDate: document.getElementById('checkDate').value,
-            deliveryDate: document.getElementById('deliveryDate').value
-        };
-
-        if (index === -1) { projectData.push(itemData); } else { projectData[index] = itemData; }
-        resetForm();
-        renderTable();
-    });
-
-    function editRow(index) {
-        const item = projectData[index];
-        document.getElementById('editIndex').value = index;
-        document.getElementById('unitName').value = item.name;
-        document.getElementById('chk1').checked = item.chk1;
-        document.getElementById('chk2').checked = item.chk2;
-        document.getElementById('chk3').checked = item.chk3;
-        document.getElementById('chk4').checked = item.chk4;
-        document.getElementById('chk5').checked = item.chk5;
-        document.getElementById('chk6').checked = item.chk6;
-        document.getElementById('progressStatus').value = item.status;
-        document.getElementById('remarks').value = item.remarks;
-        document.getElementById('checkDate').value = item.checkDate;
-        document.getElementById('deliveryDate').value = item.deliveryDate;
-
-        document.getElementById('formTitle').innerText = `編輯單元：${item.name}`;
-        document.getElementById('submitBtn').innerText = "儲存修改";
-        document.getElementById('submitBtn').className = "btn btn-accent";
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function deleteRow(index) {
-        if (confirm(`確定要刪除「${projectData[index].name}」嗎？`)) {
-            projectData.splice(index, 1);
-            renderTable();
-            if(document.getElementById('editIndex').value == index) resetForm();
-        }
-    }
-
-    function resetForm() {
-        document.getElementById('dataForm').reset();
-        document.getElementById('editIndex').value = "-1";
-        document.getElementById('formTitle').innerText = "新增查驗資料單元";
-        document.getElementById('submitBtn').innerText = "確認新增";
-        document.getElementById('submitBtn').className = "btn btn-primary";
-    }
-
-    renderTable();
-</script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
-  // 這是從你圖片中提取的專屬通訊鑰匙
+  // 1. 你的專屬 Firebase 鑰匙
   const firebaseConfig = {
     apiKey: "AIzaSyCv66pE4zBxas4QySrmeVyXXXhqbyGllLI",
     authDomain: "diaphragm-wall-61033.firebaseapp.com",
@@ -551,91 +362,151 @@
     appId: "1:245135889935:web:b590ed96b8ba879115b57a"
   };
 
-  // 初始化 Firebase 與資料庫
+  // 2. 初始化雲端資料庫
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const recordsCollection = collection(db, "engineering_records");
 
-  // ========================================================
-  // 1. 【動作：確認新增】當按下按鈕，把畫面的資料送到雲端
-  // ========================================================
-  // ⚠️ 請確保你 HTML 的「確認新增」按鈕 id 叫作 "add-btn"
-  const addBtn = document.getElementById("add-btn");
-  if (addBtn) {
-    addBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
+  // 綁定 HTML 的表單與按鈕元件
+  const dataForm = document.getElementById('dataForm');
+  const tableBody = document.getElementById('tableBody');
+  const statsCount = document.getElementById('statsCount');
+  const submitBtn = document.getElementById('submitBtn');
 
-      // 抓取你畫面輸入框的值（請對應你 HTML 欄位的 id）
-      const unitName = document.getElementById("unit-name-input")?.value || ""; 
-      const progress = document.getElementById("progress-select")?.value || ""; 
-      const checkDate = document.getElementById("check-date-input")?.value || ""; 
-      const deliveryDate = document.getElementById("delivery-date-input")?.value || ""; 
-      const note = document.getElementById("note-input")?.value || ""; 
+  // 用來在前端暫存雲端抓下來的資料清單，方便編輯時查找
+  let localCloudData = [];
 
-      // 抓取檢驗項目狀態（勾選方塊）
-      const tremie = document.getElementById("checkbox-tremie")?.checked || false;
-      const fluid = document.getElementById("checkbox-fluid")?.checked || false;
-      const sonic = document.getElementById("checkbox-sonic")?.checked || false;
-      const rebar = document.getElementById("checkbox-rebar")?.checked || false;
-      const concrete = document.getElementById("checkbox-concrete")?.checked || false;
-      const singleDone = document.getElementById("checkbox-singledone")?.checked || false;
-
-      if (!unitName) {
-        alert("請填寫 查驗表/單元名稱！");
-        return;
-      }
-
-      try {
-        // 送出數據到 Firebase
-        await addDoc(recordsCollection, {
-          unitName, progress, checkDate, deliveryDate, note,
-          tremie, fluid, sonic, rebar, concrete, singleDone,
-          timestamp: new Date() // 用來排序
-        });
-        
-        // 新增成功後清空輸入框
-        document.getElementById("unit-name-input").value = "";
-        if(document.getElementById("note-input")) document.getElementById("note-input").value = "";
-      } catch (error) {
-        alert("同步失敗，請檢查 Firebase 防火牆測試模式是否開啟！");
-        console.error(error);
-      }
-    });
-  }
-
-  // ========================================================
-  // 2. 【動作：即時同步】雲端有新資料，立刻更新雙方的網頁表格
-  // ========================================================
-  const q = query(recordsCollection, orderBy("timestamp", "desc"));
+  // 3. 【動作：監聽雲端資料】（兩邊網頁即時看見更新的核心）
+  const q = query(recordsCollection, orderBy("timestamp", "asc")); // 按時間由舊到新排序
   onSnapshot(q, (snapshot) => {
-    // ⚠️ 請確保你 HTML 表格的 tbody id 叫作 "table-body"
-    const tbody = document.getElementById("table-body");
-    if (!tbody) return;
-    
-    tbody.innerHTML = ""; // 清空舊畫面
+    tableBody.innerHTML = '';
+    localCloudData = [];
+    let completedCount = 0;
 
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      const tr = document.createElement("tr");
+    snapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+      const docId = docSnap.id;
       
-      // 根據資料動態輸出表格內容
+      // 把 ID 存進陣列，方便後續編輯與刪除定位
+      localCloudData.push({ id: docId, ...item });
+
+      if (item.status === '完成列印') completedCount++;
+
+      // 動態渲染 HTML 表格列 (保持原本精美的 CSS 排版與 RWD 手機標籤)
+      const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${data.unitName}</td>
-        <td>${data.tremie ? '✓' : '—'}</td>
-        <td>${data.fluid ? '✓' : '—'}</td>
-        <td>${data.sonic ? '✓' : '—'}</td>
-        <td>${data.rebar ? '✓' : '—'}</td>
-        <td>${data.concrete ? '✓' : '—'}</td>
-        <td>${data.singleDone ? '✓' : '—'}</td>
-        <td><span class="badge">${data.progress}</span></td>
-        <td>${data.note || '—'}</td>
-        <td>${data.checkDate || '—'}</td>
-        <td>${data.deliveryDate || '—'}</td>
-        <td><button class="btn-delete" data-id="${doc.id}">刪除</button></td>
+        <td data-label="查驗表/單元" style="font-weight: 500; color: var(--primary-teal);">${item.name}</td>
+        <td data-label="特密管">${item.chk1 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+        <td data-label="穩定液">${item.chk2 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+        <td data-label="超音波">${item.chk3 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+        <td data-label="鋼筋籠">${item.chk4 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+        <td data-label="混凝土">${item.chk5 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+        <td data-label="單項完成">${item.chk6 ? '<span class="dot-active">✓</span>' : '<span class="dot-inactive">－</span>'}</td>
+        <td data-label="完成進度"><span class="badge ${item.status === '完成列印' ? 'badge-success' : 'badge-warning'}">${item.status}</span></td>
+        <td data-label="備註" style="color: var(--text-muted); font-size: 12px;">${item.remarks || '—'}</td>
+        <td data-label="查驗日期">${item.checkDate || '—'}</td>
+        <td data-label="資料交付">${item.deliveryDate || '—'}</td>
+        <td data-label="操作">
+            <div class="action-btns">
+                <button type="button" class="btn btn-secondary btn-sm btn-edit" data-id="${docId}">編輯</button>
+                <button type="button" class="btn btn-accent btn-sm btn-delete" style="background-color: #E2DDD5; color: #555;" data-id="${docId}" data-name="${item.name}">刪除</button>
+            </div>
+        </td>
       `;
-      tbody.appendChild(tr);
+      tableBody.appendChild(tr);
     });
+
+    // 更新頂部數據看板
+    statsCount.innerHTML = `總計：<b>${localCloudData.length}</b> 筆 | 已完成：<span style="color: var(--primary-teal)"><b>${completedCount}</b></span> 筆 | 未完成：<span style="color: var(--accent-orange)"><b>${localCloudData.length - completedCount}</b></span> 筆`;
   });
+
+  // 4. 【動作：確認送出表單（新增或修改）】
+  dataForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const editId = document.getElementById('editIndex').value; // 抓取目前儲存的是文件ID還是-1
+    
+    // 收集畫面上使用者填寫的最新工程數據
+    const itemData = {
+      name: document.getElementById('unitName').value,
+      chk1: document.getElementById('chk1').checked,
+      chk2: document.getElementById('chk2').checked,
+      chk3: document.getElementById('chk3').checked,
+      chk4: document.getElementById('chk4').checked,
+      chk5: document.getElementById('chk5').checked,
+      chk6: document.getElementById('chk6').checked,
+      status: document.getElementById('progressStatus').value,
+      remarks: document.getElementById('remarks').value,
+      checkDate: document.getElementById('checkDate').value,
+      deliveryDate: document.getElementById('deliveryDate').value,
+      timestamp: new Date()
+    };
+
+    try {
+      if (editId === "-1") {
+        // 新增：直接推送到雲端資料庫
+        await addDoc(recordsCollection, itemData);
+      } else {
+        // 修改：指定舊資料的文件ID更新雲端內容
+        const docRef = doc(db, "engineering_records", editId);
+        await updateDoc(docRef, itemData);
+      }
+      resetForm();
+    } catch (error) {
+      alert("雲端同步失敗，請確認 Firebase 規則是否設定為測試模式！");
+      console.error(error);
+    }
+  });
+
+  // 5. 【動作：點擊表格中的 編輯/刪除 按鈕】
+  document.addEventListener('click', async function(e) {
+    // 處理編輯按鈕
+    if (e.target.classList.contains('btn-edit')) {
+      const docId = e.target.getAttribute('data-id');
+      const item = localCloudData.find(d => d.id === docId);
+      if (!item) return;
+
+      document.getElementById('editIndex').value = docId; // 將這筆資料的雲端 ID 塞入隱藏欄位
+      document.getElementById('unitName').value = item.name;
+      document.getElementById('chk1').checked = item.chk1;
+      document.getElementById('chk2').checked = item.chk2;
+      document.getElementById('chk3').checked = item.chk3;
+      document.getElementById('chk4').checked = item.chk4;
+      document.getElementById('chk5').checked = item.chk5;
+      document.getElementById('chk6').checked = item.chk6;
+      document.getElementById('progressStatus').value = item.status;
+      document.getElementById('remarks').value = item.remarks;
+      document.getElementById('checkDate').value = item.checkDate;
+      document.getElementById('deliveryDate').value = item.deliveryDate;
+
+      document.getElementById('formTitle').innerText = `編輯單元：${item.name}`;
+      submitBtn.innerText = "儲存修改";
+      submitBtn.className = "btn btn-accent";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 處理刪除按鈕
+    if (e.target.classList.contains('btn-delete')) {
+      const docId = e.target.getAttribute('data-id');
+      const name = e.target.getAttribute('data-name');
+      if (confirm(`確定要從雲端同步刪除「${name}」嗎？`)) {
+        try {
+          await deleteDoc(doc(db, "engineering_records", docId));
+          if(document.getElementById('editIndex').value === docId) resetForm();
+        } catch (error) {
+          console.error("刪除失敗：", error);
+        }
+      }
+    }
+  });
+
+  // 讓全域可以呼叫重置表單方法
+  window.resetForm = function() {
+    dataForm.reset();
+    document.getElementById('editIndex').value = "-1";
+    document.getElementById('formTitle').innerText = "新增查驗資料單元";
+    submitBtn.innerText = "確認新增";
+    submitBtn.className = "btn btn-primary";
+  }
 </script>
 </body>
 </html>
