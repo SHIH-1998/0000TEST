@@ -537,6 +537,105 @@
 
     renderTable();
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
+  // 這是從你圖片中提取的專屬通訊鑰匙
+  const firebaseConfig = {
+    apiKey: "AIzaSyCv66pE4zBxas4QySrmeVyXXXhqbyGllLI",
+    authDomain: "diaphragm-wall-61033.firebaseapp.com",
+    projectId: "diaphragm-wall-61033",
+    storageBucket: "diaphragm-wall-61033.firebasestorage.app",
+    messagingSenderId: "245135889935",
+    appId: "1:245135889935:web:b590ed96b8ba879115b57a"
+  };
+
+  // 初始化 Firebase 與資料庫
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const recordsCollection = collection(db, "engineering_records");
+
+  // ========================================================
+  // 1. 【動作：確認新增】當按下按鈕，把畫面的資料送到雲端
+  // ========================================================
+  // ⚠️ 請確保你 HTML 的「確認新增」按鈕 id 叫作 "add-btn"
+  const addBtn = document.getElementById("add-btn");
+  if (addBtn) {
+    addBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // 抓取你畫面輸入框的值（請對應你 HTML 欄位的 id）
+      const unitName = document.getElementById("unit-name-input")?.value || ""; 
+      const progress = document.getElementById("progress-select")?.value || ""; 
+      const checkDate = document.getElementById("check-date-input")?.value || ""; 
+      const deliveryDate = document.getElementById("delivery-date-input")?.value || ""; 
+      const note = document.getElementById("note-input")?.value || ""; 
+
+      // 抓取檢驗項目狀態（勾選方塊）
+      const tremie = document.getElementById("checkbox-tremie")?.checked || false;
+      const fluid = document.getElementById("checkbox-fluid")?.checked || false;
+      const sonic = document.getElementById("checkbox-sonic")?.checked || false;
+      const rebar = document.getElementById("checkbox-rebar")?.checked || false;
+      const concrete = document.getElementById("checkbox-concrete")?.checked || false;
+      const singleDone = document.getElementById("checkbox-singledone")?.checked || false;
+
+      if (!unitName) {
+        alert("請填寫 查驗表/單元名稱！");
+        return;
+      }
+
+      try {
+        // 送出數據到 Firebase
+        await addDoc(recordsCollection, {
+          unitName, progress, checkDate, deliveryDate, note,
+          tremie, fluid, sonic, rebar, concrete, singleDone,
+          timestamp: new Date() // 用來排序
+        });
+        
+        // 新增成功後清空輸入框
+        document.getElementById("unit-name-input").value = "";
+        if(document.getElementById("note-input")) document.getElementById("note-input").value = "";
+      } catch (error) {
+        alert("同步失敗，請檢查 Firebase 防火牆測試模式是否開啟！");
+        console.error(error);
+      }
+    });
+  }
+
+  // ========================================================
+  // 2. 【動作：即時同步】雲端有新資料，立刻更新雙方的網頁表格
+  // ========================================================
+  const q = query(recordsCollection, orderBy("timestamp", "desc"));
+  onSnapshot(q, (snapshot) => {
+    // ⚠️ 請確保你 HTML 表格的 tbody id 叫作 "table-body"
+    const tbody = document.getElementById("table-body");
+    if (!tbody) return;
+    
+    tbody.innerHTML = ""; // 清空舊畫面
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const tr = document.createElement("tr");
+      
+      // 根據資料動態輸出表格內容
+      tr.innerHTML = `
+        <td>${data.unitName}</td>
+        <td>${data.tremie ? '✓' : '—'}</td>
+        <td>${data.fluid ? '✓' : '—'}</td>
+        <td>${data.sonic ? '✓' : '—'}</td>
+        <td>${data.rebar ? '✓' : '—'}</td>
+        <td>${data.concrete ? '✓' : '—'}</td>
+        <td>${data.singleDone ? '✓' : '—'}</td>
+        <td><span class="badge">${data.progress}</span></td>
+        <td>${data.note || '—'}</td>
+        <td>${data.checkDate || '—'}</td>
+        <td>${data.deliveryDate || '—'}</td>
+        <td><button class="btn-delete" data-id="${doc.id}">刪除</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+</script>
 </body>
 </html>
